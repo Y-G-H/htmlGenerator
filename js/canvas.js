@@ -4,6 +4,7 @@ function Canvas() {
     var canvasStyle = $("#canvas-style");
 
     this.elements = [];
+    this.currFocusEle;
     this.html = "";
     this.style = `
         .omit {
@@ -21,8 +22,6 @@ function Canvas() {
             max-width: 650px;
         }
     `;
-    this.currFocusEle;
-
 
     var graticule = function () {
 
@@ -31,28 +30,45 @@ function Canvas() {
     var pen = function (newEleObj) {
         // 创建元素绑定事件
         var newEle = $(newEleObj.content.html);
-        newEle.mousedown(newEleObj.content.mousedown);
+        newEle.mousedown(focusEle(newEleObj));
         _thisEle.append(newEle);
 
         // 对象绑定元素
         newEle.css({'position': "absolute"});
-        newEleObj.content.setEle(newEle);
+        newEleObj.content.ele = newEle;
 
         _this._html = newEleObj.content.html;
         _this._style = newEleObj.content.style;
     };
 
+    // 选中元素
+    var focusEle = function (newEleObj) {
+        return function (e) {
+            _this.currFocusEle = newEleObj;
+            newEleObj.content.mousedown(e);
+
+            for (var i = 0; i < _this.elements.length; i++) {
+                if (_this.currFocusEle.content.id == _this.elements[i].id) {
+                    _this.elements[i].content.selected(true);
+                } else {
+                    _this.elements[i].content.selected(false);
+                }
+            }
+        }
+    };
+
     Canvas.prototype.pen = function (newEleObj) {
-        this.elements.push(newEleObj);
         pen(newEleObj);
+        _this.elements.push(newEleObj);
     };
 
     Canvas.prototype.getEle = function () {
         return _thisEle;
     };
 
-    // 导出，即时从.canvas中获取内容
+    // 导出，即时从.canvas元素中获取内容
     Canvas.prototype.export = function () {
+        _thisEle.children("#SYS-MODEL").remove();
         var fileContent = `
             <!DOCTYPE html>
             <html lang="en">
@@ -60,7 +76,7 @@ function Canvas() {
                     <meta charset="UTF-8">
                     <title>预览</title>            
                     <style>
-                        ${this.style}
+                        ${_this.style}
                     </style>            
                 </head>
                 <body>
@@ -80,13 +96,6 @@ function Canvas() {
                 canvasStyle.html(_this.style);
                 console.log("监听到画板style发生变化");
             }
-        },
-        _html: {
-            configurable: true,
-            set: function (newValue) {
-                _this.html += newValue;
-                console.log("监听到画板html发生变化");
-            }
         }
-    })
+    });
 };

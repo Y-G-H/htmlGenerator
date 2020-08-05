@@ -17,5 +17,15 @@ var Utils = {
             id: newEle.id,
             content: newEle
         };
+    },
+    randomString: function (len) {
+        len = len || 32;
+        var $chars = 'ABCDEFGHIJKLMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';    /****默认去掉了容易混淆的字符oOl,9gq,Vv,Uu,1****/
+        var maxPos = $chars.length;
+        var pwd = '';
+        for (i = 0; i < len; i++) {
+            pwd += $chars.charAt(Math.floor(Math.random() * maxPos));
+        }
+        return pwd;
     }
 };

@@ -25,7 +25,25 @@ var elementLib = [{
             `
             <div class="CUSTOMER-NAME">
                <span>客户姓名：</span>
-               <span class="omit omit-xs">废物</span>
+               <span class="omit omit-xs">吼吼吼</span>
+            </div>
+        `, `
+            .CUSTOMER-NAME {
+                width: 237px;
+                height: 18px;
+                font-size: 12px;
+            }
+        `);
+        return ele;
+    }()
+},{
+    id: "CONTACT",
+    content: function () {
+        var ele = new ElementObj("CONTACT", "联系人",
+            `
+            <div class="CUSTOMER-NAME">
+               <span>联系人：</span>
+               <span class="omit omit-xs">哈哈哈</span>
             </div>
         `, `
             .CUSTOMER-NAME {
@@ -79,7 +97,7 @@ function ModelNav(canvas) {
 
     for (var i = 0; i < elementLib.length; i++) {
         var content = elementLib[i].content;
-        var modelOpt = $(`<div class="model-opt" data-id="${content.id}">
+        var modelOpt = $(`<div class="model-opt" data-id="${content.eleId}">
                               <span>${content.name}</span>
                           </div>`);
         modelNav.append(modelOpt);
